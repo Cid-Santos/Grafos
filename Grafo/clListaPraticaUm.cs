@@ -174,17 +174,55 @@ namespace Grafo
                 }
         }
 
+
         /// <summary>
-        /// 
+        /// O metodo devolve true se o grafo  G é bipartido e devolve 0 em caso contrário. 
+        /// Além disso, se G é bipartido, a função atribui uma "cor" a cada vértice de G de 
+        /// tal forma que toda aresta tenha pontas de cores diferentes. As cores dos vértices, 
+        /// 0 e 1, são registradas no vetor cor indexado pelos vértices. 
+        /// um grafo bipartido ou bigrafo é um grafo cujos vértices podem ser 
+        /// divididos em dois conjuntos disjuntos U e V tais que toda aresta
+        /// conecta um vértice em U a um vértice em V; ou seja, U e V são conjuntos independentes.
+        /// Equivalentemente, um grafo bipartido é um grafo que não contém qualquer ciclo de comprimento ímpar
+        /// Os dois conjuntos U e V podem ser pensados como uma coloração do grafo com duas cores: 
+        /// se nós colorirmos todos os nodos em U de azul, e todos os nodos em V de verde, cada
+        /// aresta tem terminações de cores diferentes, como é exigido no problema de coloração de grafos.
+        /// Em contrapartida, tal coloração é impossível no caso de um grafo que não é bipartido,
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for Bipartido</returns>
         public bool isBipartido(Grafo G)
         {
+            // memset(match, -1, sizeof(match));
+            int pares = 0;
+            for (int i = 0; i < N; i++)
+            {
+                //   memset(seen, 0, sizeof(seen));
+                if (bpm(i)) pares++;
+            }
+
             return true;
         }
 
+        static int N, M;
+        int[,] g = new int[N, M]; // g[a][b] = a pode se juntar com b
+        int[] match = new int[M]; // match[i] = par do i-ésimo elemento de b
+        bool[] seen = new bool[N];
 
+        bool bpm(int v)
+        {
+            if (seen[v]) return false;
+            seen[v] = true;
+            for (int i = 0; i < M; i++)
+            {
+                if (match[i] == -1 || bpm(match[i]))
+                {
+                    match[i] = v;
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// 
@@ -199,35 +237,87 @@ namespace Grafo
 
 
         /// <summary>
-        /// 
+        /// O metodo devolve true se o grafo  G é Eureliano, pois 
+        /// Um grafo G é dito ser euleriano se há um ciclo em G que contenha todas as suas arestas. Este ciclo é dito ser um ciclo euleriano. 
+        /// um solução simples para determinar se um grafo é euleriano e o seguinte Teorema
+        /// Teorema: Um multigrafo M é euleriano se e somente se M é conexo e cada vértice de M tem grau par. 
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for Euleriano</returns>
         public bool isEuleriano(Grafo G)
         {
-            return true;
+            int M = G.get_numVertices();
+            int N = 0;
+            if (isConexo(G))
+            {
+                for (int v1 = 0; v1 < M; v1++)
+                {
+                    if ((getGrau(v1)%2) == 0)
+                    {
+                        N++;
+                    }
+                }
+                if (M == N)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
         /// <summary>
-        /// 
+        /// O metodo devolve true se o grafo  G é inicursal, pois 
+        /// Um grafo conexo é unicursal se, e somente 
+        /// se, ele possuir exatamente 2 vértices de grau ímpar.
+        /// TEOREMA: Em um grafo conexo G com exatamente 2k
+        /// vértices de grau ímpar, existem k subgrafos disjuntos
+        /// de arestas, todos eles unicursais, de maneira que
+        /// juntos eles contêm todas as arestas de G.
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for Unicursal</returns>
         public bool isUnicursal(Grafo G)
         {
-            return true;
+            int M = G.get_numVertices();
+            if (isConexo(G))
+            {
+                for (int v1 = 0; v1 < M; v1++)
+                {
+                    if ((getGrau(v1) % 2) > 0)
+                    {
+                        N++;
+                    }
+                }
+                if (2 == N)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
         /// <summary>
-        /// 
+        /// O metodo devolve true se o grafo  G é Hamiltoniano, pois 
+        /// Um grafo G é dito ser hamiltoniano se existe um ciclo em G 
+        /// que contenha todos os  seus vértices, sendo que cada vértice
+        /// só aparece uma vez no ciclo.Este ciclo é chamado de ciclo hamiltoniano.
+        /// Sendo assim.um grafo é hamiltoniano se ele contiver um ciclo hamiltoniano.
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for  hamiltoniano</returns>
         public bool isHamiltoniano(Grafo G)
         {
-            return true;
+            int M = G.get_numVertices();
+            if (M >= 3)
+            {
+                if (isCompleto(G))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #endregion
@@ -273,13 +363,13 @@ namespace Grafo
 
 
         /// <summary>
-        /// 
+        /// O metodo retorna o grafo transposto de G 
         /// </summary>
         /// <param name="G"></param>
         /// <returns></returns>
-        public Grafo getTransposto(Grafo G)
+        public GrafoLista getTransposto(GrafoLista G)
         {
-            return null;
+            return G.grafoTransposto();
         }
 
 

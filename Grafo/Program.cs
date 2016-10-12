@@ -214,33 +214,37 @@ namespace Grafo
                             Console.WriteLine(Vertice);
                             break;
                         case 9:
-                           
-                        break;
+                            Vertice = (listaexc.isConexo(G)) ? "\nEste grafo e conexo" : "Este grafo nao e conexo";
+                            Console.WriteLine(Vertice);
+                            break;
                         case 10:
-
+                            Vertice = (listaexc.isBipartido(G)) ? "\nEste grafo e BiPartido" : "Este grafo nao e BiPartido";
+                            Console.WriteLine(Vertice);
                             break;
                         case 11:
 
                             break;
                         case 12:
-
+                            Vertice = (listaexc.isEuleriano(G)) ? "\nEste grafo e Eureliano" : "Este grafo nao e Eureliano";
+                            Console.WriteLine(Vertice);
                             break;
                         case 13:
 
                             break;
                         case 100:
                             tipoGrafo = 0;
-            break;
-            default:
+                            break;
+                        default:
 
                             break;
-        }
-        Console.ReadLine();
+                    }
+                    Console.ReadLine();
                     Console.Clear();
                 }
                 else if (tipoGrafo == 2)
                 {
-                    Console.WriteLine("Considere um grafo não dirigido:");
+                    listaexc = new clListaPraticaUm(G);
+                    Console.WriteLine("Considere um grafo dirigido:");
 
                     Console.WriteLine("╔═════════════════════════════╗");
                     Console.WriteLine("║[1  ] = Grafo Ciclico        ║");
@@ -266,8 +270,9 @@ namespace Grafo
                         case 3:
                             break;
                         case 4:
-                            G = G.grafoTransposto();
-                            G.imprime();
+                            GrafoLista Gl;
+                            Gl  = listaexc.getTransposto(G);
+                            Gl.imprime();
                             break;
                         case 5:
 
@@ -281,7 +286,8 @@ namespace Grafo
 
                             break;
                     }
-Console.Clear();
+                    Console.ReadLine();
+                    Console.Clear();
                 }
             }
             while (opcao != 0);
