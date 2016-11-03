@@ -30,7 +30,7 @@ namespace Grafo
         /// <returns> verdadeiro de for adjacente </returns>
         public bool isadjacente(int v1, int v2)
         {
-            return G.existeAresta(v1, v2, 0);
+            return G.existeAresta(v1, v2, 1);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Grafo
 
         /// <summary>
         ///  Metodo retorna se o vertice e pendente, pois 
-        ///  um vertice pendente e aqule que tem grau 1
+        ///  um vertice pendente e aquele que tem grau 1
         /// </summary>
         /// <param name="v1"></param>
         /// <returns>Verdadeiro de for Pendente</returns>
@@ -103,7 +103,7 @@ namespace Grafo
         /// <returns>Verdadeiro de for Nulo</returns>
         public bool isNulo(Grafo G)
         {
-            return (G.get_numVertices() > 0) ? true : false;
+            return (G.get_numVertices() > 0) ? false : true;
         }
 
 
@@ -111,9 +111,11 @@ namespace Grafo
         /// Metodo retorna se o grafo e completo, pois 
         /// Um grafo completo é um grafo simples em que todo vértice é adjacente 
         /// a todos os outros vértices. 
+        /// Um grafo Kn possui o número máximo possível de arestas para um dados n. 
+        /// Ele é, também regular-(n-1) pois todos os seus vértices tem grau n-1. 
         /// </summary>
         /// <param name="G"></param>
-        /// <returns>Verdadeiro de for completo</returns>
+        /// <returns>Verdadeiro se for completo</returns>
         public bool isCompleto(Grafo G)
         {
             int nv = G.get_numVertices();
@@ -131,9 +133,6 @@ namespace Grafo
 
 
 
-        private static int TAM;
-        private static int[] visitado = new int[TAM]; // vetor de visitação
-        private static int[,] adj = new int[TAM, TAM];
         /// <summary>
         /// Metodo retorna se um grasfo e conexo , pois 
         /// Um grafo G=(V, E) é conexo se existir um caminho entre qualquer par de vértices.
@@ -146,37 +145,36 @@ namespace Grafo
         /// <returns>Verdadeiro de for conexo</returns>
         public bool isConexo(Grafo G)
         {
-            TAM = G.get_numVertices();
-            // limpa todas as marcas de visitação
-            for (int i = 0; i < TAM; i++)
-                visitado[i] = 0;
+            int numVertices = G.get_numVertices();
+            bool[] visitados = new bool[numVertices];
 
-            // inicia busca no nó de índice 0 Busca em profundidade (DFS)
-            dfs(0);
+            for (int i = 0; i < numVertices; i++)
+                visitados[i] = false;
 
-            // testa se todos os nós foram visitados com uma única busca
-            for (int i = 0; i < TAM; i++)
-                if (visitado[i] != 0)
+            for (int i = 0; i < numVertices; i++)
+            {
+                for (int j = 0; j < numVertices; j++)
+                {
+                    if (G.existeAresta(i, j, 1) && i != j)
+                    {
+                        visitados[i] = true;
+                    }
+                }
+
+            }
+
+            for (int i = 0; i < numVertices; i++)
+            {
+                if (!visitados[i])
                     return false;
+            }
+
             return true;
         }
 
 
-        public void dfs(int u)
-        {
-            if (visitado[u] == 1)
-                return;
-            visitado[u] = 1;
-            for (int v = 0; v < TAM; v++)
-                if (adj[u, v] == 1)
-                {
-                    dfs(v);
-                }
-        }
-
-
         /// <summary>
-        /// O metodo devolve true se o grafo  G é bipartido e devolve 0 em caso contrário. 
+        /// O metodo devolve true se o grafo  G é bipartido e devolve false em caso contrário. 
         /// Além disso, se G é bipartido, a função atribui uma "cor" a cada vértice de G de 
         /// tal forma que toda aresta tenha pontas de cores diferentes. As cores dos vértices, 
         /// 0 e 1, são registradas no vetor cor indexado pelos vértices. 
@@ -191,48 +189,63 @@ namespace Grafo
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for Bipartido</returns>
-        public bool isBipartido(Grafo G)
-        {
-            // memset(match, -1, sizeof(match));
-            int pares = 0;
-            for (int i = 0; i < N; i++)
-            {
-                //   memset(seen, 0, sizeof(seen));
-                if (bpm(i)) pares++;
-            }
 
+        int numVertices;
+        int[] cor;
+        GrafoMatriz Gm = null;
+        public bool isBipartido(GrafoMatriz Gm)
+        {
+            this.Gm = Gm;
+            numVertices = Gm.get_numVertices();
+            cor = new int[numVertices];
+            int v;
+            int c = 0; //representa a "cor"
+            for (v = 0; v < numVertices; ++v) cor[v] = -1;
+            for (v = 0; v < numVertices; ++v)
+                if (cor[v] == -1)
+                    if (dfsCor(v, c) == 0) return false;
             return true;
         }
 
-        static int N, M;
-        int[,] g = new int[N, M]; // g[a][b] = a pode se juntar com b
-        int[] match = new int[M]; // match[i] = par do i-ésimo elemento de b
-        bool[] seen = new bool[N];
-
-        bool bpm(int v)
+        int dfsCor(int v, int c)
         {
-            if (seen[v]) return false;
-            seen[v] = true;
-            for (int i = 0; i < M; i++)
+            int p;
+            cor[v] = 1 - c; //???
+            for (p = 0; p < numVertices; ++p)
             {
-                if (match[i] == -1 || bpm(match[i]))
-                {
-                    match[i] = v;
-                    return true;
+                if ((Gm.mat[v, p] == 1 && v != p) && cor[p] == -1)
+                { //existe aresta e ainda não tem cor
+                    if (dfsCor(p, 1 - c) == 0) return 0;
                 }
+                else if (cor[p] == 1 - c) return 0;
             }
-            return false;
+            return 1;
         }
+
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Retorna um grafo coplementar</returns>
-        public Grafo getComplementar(Grafo G)
+        public Grafo getComplementar(GrafoMatriz Gm)
         {
+            numVertices = Gm.get_numVertices();
+            GrafoLista Gl = new GrafoLista(numVertices);
+            for (int i = 0; i < numVertices; ++i)
+            {
+                for (int j = 0; j < numVertices; j++)
+                {
+                    if (!Gm.existeAresta(i, j, 1))
+                    {
+                        Gl.insereAresta(i, j, 1);
+                    }
+                }
+            }
 
-            return null;
+
+            return Gl;
         }
 
 
@@ -252,7 +265,7 @@ namespace Grafo
             {
                 for (int v1 = 0; v1 < M; v1++)
                 {
-                    if ((getGrau(v1)%2) == 0)
+                    if ((getGrau(v1) % 2) == 0)
                     {
                         N++;
                     }
@@ -277,6 +290,7 @@ namespace Grafo
         /// </summary>
         /// <param name="G"></param>
         /// <returns>Verdadeiro de for Unicursal</returns>
+        int N = 0;
         public bool isUnicursal(Grafo G)
         {
             int M = G.get_numVertices();
@@ -331,7 +345,40 @@ namespace Grafo
         /// <returns>Verdadeiro de for Ciclo</returns>
         public bool hasCiclo(Grafo G)
         {
-            return true;
+            int M = G.get_numVertices();
+            int[] vet = new int[M];
+
+            int total = 0;
+            int comp = 0;
+            for (int v1 = 0; v1 < M; v1++)
+            {
+                for (int v2 = 0; v2 < M; v2++)
+                {
+                    if (G.existeAresta(v1, v2, 1))
+                    {
+                        vet[v2] = v2;
+                    }
+                }
+                for (int i = 0; i < vet.Length; i++)
+                {
+                    if (vet[i] != v1) total++;
+                }
+                for (int j = 0; j < M; j++)
+                {
+                    if (vet[j] != v1)
+                        for (int k = 0; k < M; k++)
+                        {
+                            if (vet[k] != v1)
+                                if (G.existeAresta(vet[j], vet[k], 1))
+                                {
+                                    comp++;
+                                }
+                        }
+                }
+                if (total == comp)
+                    return true;
+            }
+            return false;
         }
 
 
@@ -340,9 +387,18 @@ namespace Grafo
         /// </summary>
         /// <param name="v1"></param>
         /// <returns>Retorna o grau de Entrada</returns>
-        public int getGrauEntrada(int v1)
+        public int getGrauEntrada(Grafo G, int v)
         {
-            return 2;
+            int M = G.get_numVertices();
+            int grau = 0;
+            for (int v1 = 0; v1 < M; v1++)
+            {
+                if (G.existeAresta(v1, v, 1))
+                {
+                    grau++;
+                }
+            }
+            return grau;
         }
 
 
@@ -353,11 +409,7 @@ namespace Grafo
         public void ordenacaoTopologica(Grafo G)
         {
             //verifique  se  o  grafo é acíclico antes
-            if (hasCiclo(G))
-            {
-
-
-            }
+   
 
         }
 
@@ -380,6 +432,18 @@ namespace Grafo
         /// <returns>Verdadeiro de for Conexo</returns>
         public bool isFConexo(Grafo G)
         {
+            int M = G.get_numVertices();
+            for (int v1 = 0; v1 < M; v1++)
+            {
+                for (int v2 = 0; v2 < M; v2++)
+                {
+                    if (!G.existeAresta(v1, v2, 1))
+                    {
+                        return false;
+                    }
+                }
+
+            }
             return true;
         }
 

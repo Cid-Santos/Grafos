@@ -17,9 +17,9 @@ namespace Grafo
 {
     public class GrafoMatriz : Grafo
     {
-        private int[,] mat;
-        private int numVertices;
-        private int[] pos;
+        public int[,] mat;
+        public int numVertices;
+        public int[] pos;
 
         public GrafoMatriz(int numVertices)
         {

@@ -19,6 +19,7 @@ namespace Grafo
     public class GrafoLista : Grafo
     {     
         private Lista[] adj;
+        private int[,] mat;
         private int numVertices;
 
         public GrafoLista(int numVertices)
@@ -39,9 +40,8 @@ namespace Grafo
 
         public bool existeAresta(int v1, int v2, int peso)
         {
-            Aresta a = new Aresta(v1, v2, peso);
-
-            return (this.adj[v1].pesquisa(a));
+            GrafoMatriz mat = new GrafoMatriz(5);
+            return (mat.existeAresta(v1, v2, peso));
         }
 
         public bool listaAdjVazia(int v)

@@ -108,10 +108,12 @@ namespace Grafo
         {
 
             GrafoLista G = null;
+            GrafoMatriz Gm = null;
+            int numVertices = 0;
             clListaPraticaUm listaexc;
-            String filename = @"C:\Users\Cid\Documents\Visual Studio 2015\Projects\Grafos\input.txt";
+            String filename = "";
 
-            G = instanciaGrafoDoArquivo(filename, G);
+
 
             do
             {
@@ -131,11 +133,15 @@ namespace Grafo
                     {
                         case 1:
                             tipoGrafo = 1;
-                            filename = @"C:\Users\Cid\Documents\Visual Studio 2015\Projects\Grafos\input.txt";
+                            filename = @"C:\Users\Cid\Documents\Visual Studio 2015\Projects\Grafos\inputND.txt";
+                            G = instanciaGrafoDoArquivo(filename, G);
+                            Gm = instanciaGrafoDoArquivo(filename, Gm);
                             break;
                         case 2:
                             tipoGrafo = 2;
-                            filename = @"C:\Users\Cid\Documents\Visual Studio 2015\Projects\Grafos\input.txt";
+                            filename = @"C:\Users\Cid\Documents\Visual Studio 2015\Projects\Grafos\inputD.txt";
+                            G = instanciaGrafoDoArquivo(filename, G);
+                            Gm = instanciaGrafoDoArquivo(filename, Gm);
                             break;
                         case 0:
                             tipoGrafo = 0;
@@ -151,85 +157,110 @@ namespace Grafo
                     Console.WriteLine("Considere um grafo não dirigido:");
 
                     Console.WriteLine("╔═════════════════════════════╗");
-                    Console.WriteLine("║[1  ] = Imprimir Grafo       ║");
-                    Console.WriteLine("║[2  ] = Vertices Adjacentes  ║");
-                    Console.WriteLine("║[3  ] = Grau do Vertice      ║");
-                    Console.WriteLine("║[4  ] = Grafo Regular        ║");
-                    Console.WriteLine("║[5  ] = Vertice Isolado      ║");
-                    Console.WriteLine("║[6  ] = Vertice Pendente     ║");
-                    Console.WriteLine("║[7  ] = Grafo Nulo           ║");
-                    Console.WriteLine("║[8  ] = Grafo Completo       ║");
-                    Console.WriteLine("║[9  ] = Grafo Conexo         ║");
-                    Console.WriteLine("║[10 ] = Grafo Bipartido      ║");
-                    Console.WriteLine("║[11 ] = Grafo Complementar   ║");
-                    Console.WriteLine("║[12 ] = Grafo Eureliano      ║");
-                    Console.WriteLine("║[13 ] = grafo Unicursal      ║");
-                    Console.WriteLine("║[14 ] = grafo Hamiltoniano   ║");
+                    Console.WriteLine("║[0  ] = Imprimir Grafo       ║");
+                    Console.WriteLine("║[1  ] = Vertices Adjacentes  ║");
+                    Console.WriteLine("║[2  ] = Grau do Vertice      ║");
+                    Console.WriteLine("║[3  ] = Grafo Regular        ║");
+                    Console.WriteLine("║[4  ] = Vertice Isolado      ║");
+                    Console.WriteLine("║[5  ] = Vertice Pendente     ║");
+                    Console.WriteLine("║[6  ] = Grafo Nulo           ║");
+                    Console.WriteLine("║[7  ] = Grafo Completo       ║");
+                    Console.WriteLine("║[8  ] = Grafo Conexo         ║");
+                    Console.WriteLine("║[9  ] = Grafo Bipartido      ║");
+                    Console.WriteLine("║[10 ] = Grafo Complementar   ║");
+                    Console.WriteLine("║[11 ] = Grafo Eureliano      ║");
+                    Console.WriteLine("║[12 ] = grafo Unicursal      ║");
+                    Console.WriteLine("║[13 ] = grafo Hamiltoniano   ║");
                     Console.WriteLine("║[100] = Menu Principal       ║");
                     Console.WriteLine("╚═════════════════════════════╝");
                     Console.Write("Digite uma opção: ");
                     opcao = Int32.Parse(Console.ReadLine());
                     switch (opcao)
                     {
-                        case 1:
+                        case 0:
                             G.imprime();
                             break;
-                        case 2:
-                            Console.Write("\nEntre com V1: ");
-                            v1 = Int32.Parse(Console.ReadLine());
-                            Console.Write("\nEntre com V2: ");
-                            v2 = Int32.Parse(Console.ReadLine());
-                            Vertice = (listaexc.isadjacente(v1, v2)) ? "O Vertice V" + v1 + " e adjacente a v" + v2 : "O Vertice V" + v1 + " nao e adjacente a v" + v2;
+                        case 1:
+                            numVertices = Gm.get_numVertices();
+                            do
+                            {
+                                Console.Write("\nEntre com V1: ");
+                                v1 = Int32.Parse(Console.ReadLine());
+                            } while (v1 >= numVertices);
+                            do
+                            {
+                                Console.Write("\nEntre com V2: ");
+                                v2 = Int32.Parse(Console.ReadLine());
+                            } while (v2 >= numVertices);
+                            Vertice = (Gm.existeAresta(v1, v2, 1)) ? "O Vertice V" + v1 + " e adjacente a v" + v2 : "O Vertice V" + v1 + " nao e adjacente a v" + v2;
                             Console.WriteLine(Vertice);
                             break;
-                        case 3:
-                            Console.Write("\nEntre com o vertice : ");
-                            v1 = Int32.Parse(Console.ReadLine()); ;
+                        case 2:
+                            numVertices = Gm.get_numVertices();
+                            do
+                            {
+                                Console.Write("\nEntre com V1: ");
+                                v1 = Int32.Parse(Console.ReadLine());
+                            } while (v1 >= numVertices);
                             grauVertive = listaexc.getGrau(v1);
                             Console.WriteLine("O grau do Vertice [" + v1 + "] = " + grauVertive);
                             break;
-                        case 4:
+                        case 3:
                             Vertice = (listaexc.isRegular(G)) ? "\nEste grafo e regular" : "Este grafo nao e regular";
                             Console.WriteLine(Vertice);
                             break;
-                        case 5:
-                            Console.Write("\nEntre com V1: ");
-                            v1 = Int32.Parse(Console.ReadLine());
+                        case 4:
+                            numVertices = Gm.get_numVertices();
+                            do
+                            {
+                                Console.Write("\nEntre com V1: ");
+                                v1 = Int32.Parse(Console.ReadLine());
+                            } while (v1 >= numVertices);
                             Vertice = (listaexc.isIsolado(v1)) ? "O Vertice V" + v1 + " e isolado" : "O Vertice V" + v1 + " nao e isolado";
                             Console.WriteLine(Vertice);
                             break;
-                        case 6:
-                            Console.Write("\nEntre com V1: ");
-                            v1 = Int32.Parse(Console.ReadLine());
+                        case 5:
+                            numVertices = Gm.get_numVertices();
+                            do
+                            {
+                                Console.Write("\nEntre com V1: ");
+                                v1 = Int32.Parse(Console.ReadLine());
+                            } while (v1 >= numVertices);
                             Vertice = (listaexc.isPedente(v1)) ? "O Vertice V" + v1 + " e Pendente" : "O Vertice V" + v1 + " nao e Pendente";
                             Console.WriteLine(Vertice);
 
                             break;
-                        case 7:
+                        case 6:
                             Vertice = (listaexc.isNulo(G)) ? "\nEste grafo e Nulo" : "Este grafo nao e nulo";
                             Console.WriteLine(Vertice);
                             break;
-                        case 8:
+                        case 7:
                             Vertice = (listaexc.isCompleto(G)) ? "\nEste grafo e completo" : "Este grafo nao e completo";
                             Console.WriteLine(Vertice);
                             break;
+                        case 8:
+                            Vertice = (listaexc.isConexo(Gm)) ? "\nEste grafo e conexo" : "Este grafo nao e conexo";
+                            Console.WriteLine(Vertice);
+                            break;
                         case 9:
-                            Vertice = (listaexc.isConexo(G)) ? "\nEste grafo e conexo" : "Este grafo nao e conexo";
+                            Vertice = (listaexc.isBipartido(Gm)) ? "\nEste grafo e BiPartido" : "Este grafo nao e BiPartido";
                             Console.WriteLine(Vertice);
                             break;
                         case 10:
-                            Vertice = (listaexc.isBipartido(G)) ? "\nEste grafo e BiPartido" : "Este grafo nao e BiPartido";
-                            Console.WriteLine(Vertice);
+                            Grafo Gl =  listaexc.getComplementar(Gm);
+                            Gl.imprime();
                             break;
                         case 11:
-
-                            break;
-                        case 12:
                             Vertice = (listaexc.isEuleriano(G)) ? "\nEste grafo e Eureliano" : "Este grafo nao e Eureliano";
                             Console.WriteLine(Vertice);
                             break;
+                        case 12:
+                            Vertice = (listaexc.isUnicursal(G)) ? "\nEste grafo e Unicursal" : "Este grafo nao e Unicursal";
+                            Console.WriteLine(Vertice);
+                            break;
                         case 13:
-
+                            Vertice = (listaexc.isHamiltoniano(G)) ? "\nEste grafo e Hamiltoniano" : "Este grafo nao e Hamiltoniano";
+                            Console.WriteLine(Vertice);
                             break;
                         case 100:
                             tipoGrafo = 0;
@@ -244,9 +275,12 @@ namespace Grafo
                 else if (tipoGrafo == 2)
                 {
                     listaexc = new clListaPraticaUm(G);
+                    String Vertice;
+                    int v1, v2, grauVertive;
                     Console.WriteLine("Considere um grafo dirigido:");
 
                     Console.WriteLine("╔═════════════════════════════╗");
+                    Console.WriteLine("║[0  ] = Imprimir Grafo       ║");
                     Console.WriteLine("║[1  ] = Grafo Ciclico        ║");
                     Console.WriteLine("║[2  ] = Grau de entrada      ║");
                     Console.WriteLine("║[3  ] = ordenacao Topologica ║");
@@ -259,23 +293,34 @@ namespace Grafo
                     switch (opcao)
                     {
                         case 0:
-
+                            G.imprime();
                             break;
                         case 1:
-
+                            Vertice = (listaexc.hasCiclo(G)) ? "\nEste grafo tem Ciclo" : "Este grafo nao tem Ciclo";
+                            Console.WriteLine(Vertice);
                             break;
                         case 2:
-
+                            numVertices = Gm.get_numVertices();
+                            do
+                            {
+                                Console.Write("\nEntre com V1: ");
+                                v1 = Int32.Parse(Console.ReadLine());
+                            } while (v1 >= numVertices);
+                            int grau = listaexc.getGrauEntrada(Gm, v1);
+                            Console.WriteLine(grau);
                             break;
                         case 3:
+                            Vertice = (listaexc.hasCiclo(Gm)) ? "\nEste grafo e Ciclo" : "Este grafo nao e Ciclo";
+                            Console.WriteLine(Vertice);
                             break;
                         case 4:
                             GrafoLista Gl;
-                            Gl  = listaexc.getTransposto(G);
+                            Gl = listaexc.getTransposto(G);
                             Gl.imprime();
                             break;
                         case 5:
-
+                            Vertice = (listaexc.isFConexo(G)) ? "\nEste grafo e FConexo" : "Este grafo nao e FConexo";
+                            Console.WriteLine(Vertice);
                             break;
                         case 100:
                             tipoGrafo = 0;
