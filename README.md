@@ -22,10 +22,6 @@
 
 14. bool hasCiclo (Grafo G) { }
 15. int getGrauEntrada (Vertice v1) { }
-16. void ordenacaoTopologica (Grafo G) { } //verifique se o grafo é
-
-
-# Acíclico antes :
-
+16. void ordenacaoTopologica (Grafo G) { } //verifique se o grafo é acíclico antes :
 17. Grafo getTransposto (Grafo G) { }
 18. bool isFConexo (Grafo G) { }
